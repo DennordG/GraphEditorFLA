@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using NodeNetwork.ViewModels;
 
 namespace GraphEditorFLA
@@ -8,19 +9,20 @@ namespace GraphEditorFLA
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		NetworkViewModel network;
+		public NetworkViewModel Network { get; }
 
 		public MainWindow()
 		{
 			InitializeComponent();
+			DataContext = this;
 
-			network = new NetworkViewModel();
+			Network = new NetworkViewModel();
 
 			var node1 = new NodeViewModel
 			{
 				Name = "Node 1"
 			};
-			network.Nodes.Add(node1);
+			Network.Nodes.Add(node1);
 
 			var node1Input = new NodeInputViewModel
 			{
@@ -28,30 +30,34 @@ namespace GraphEditorFLA
 			};
 			node1.Inputs.Add(node1Input);
 
-			var node2 = new NodeViewModel();
-			node2.Name = "Node 2";
-			network.Nodes.Add(node2);
+			var node2 = new NodeViewModel
+			{
+				Name = "Node 2"
+			};
+			Network.Nodes.Add(node2);
 
-			var node2Output = new NodeOutputViewModel();
-			node2Output.Name = "Node 2 output";
+			var node2Output = new NodeOutputViewModel
+			{
+				Name = "Node 2 output"
+			};
 			node2.Outputs.Add(node2Output);
 
-			networkView.ViewModel = network;
+			networkView.ViewModel = Network;
 		}
 
 		private void AddNode_Click(object sender, RoutedEventArgs e)
 		{
 			var newNode = new NodeViewModel
 			{
-				Name = $"New node {network.Nodes.Count}"
+				Name = $"New node {Network.Nodes.Count}"
 			};
 
-			network.Nodes.Add(newNode);
+			Network.Nodes.Add(newNode);
 		}
 
 		private void AddInput_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (var node in network.SelectedNodes)
+			foreach (var node in Network.SelectedNodes)
 			{
 				node.Inputs.Add(new NodeInputViewModel
 				{
@@ -62,7 +68,7 @@ namespace GraphEditorFLA
 
 		private void AddOutput_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (var node in network.SelectedNodes)
+			foreach (var node in Network.SelectedNodes)
 			{
 				node.Outputs.Add(new NodeOutputViewModel
 				{
@@ -73,7 +79,7 @@ namespace GraphEditorFLA
 
 		private void RemoveInput_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (var node in network.SelectedNodes)
+			foreach (var node in Network.SelectedNodes)
 			{
 				if (node.Inputs.Count > 0)
 				{
@@ -84,12 +90,21 @@ namespace GraphEditorFLA
 
 		private void RemoveOutput_Click(object sender, RoutedEventArgs e)
 		{
-			foreach (var node in network.SelectedNodes)
+			foreach (var node in Network.SelectedNodes)
 			{
 				if (node.Outputs.Count > 0)
 				{
 					node.Outputs.RemoveAt(node.Outputs.Count - 1);
 				}
+			}
+		}
+
+		private void RenameNode_Click(object sender, RoutedEventArgs e)
+		{
+			var node = Network.SelectedNodes.FirstOrDefault();
+			if (node != null)
+			{
+				node.Name = NodeName.Text;
 			}
 		}
 	}

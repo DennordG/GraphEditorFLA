@@ -16,8 +16,11 @@
             <Button Content="Add" Click="AddNode_Click"/>
             <Button Content="Add input" Click="AddInput_Click"/>
             <Button Content="Add output" Click="AddOutput_Click"/>
+            <Button Content="Remove" Command="{Binding Network.DeleteSelectedNodes}"/>
             <Button Content="Remove input" Click="RemoveInput_Click"/>
             <Button Content="Remove output" Click="RemoveOutput_Click"/>
+            <Button Content="Rename" Click="RenameNode_Click"/>
+            <TextBox Name="NodeName" Width="120"/>
         </ToolBar>
             
         <nodenetwork:NetworkView x:Name="networkView" Grid.Row="1"/>
